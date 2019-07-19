@@ -60,12 +60,16 @@ class User(db.Model):
         except jwt.InvalidTokenError:
             return 'Invalid Token'
 
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
 
-class BlacklistToken:
+
+class BlacklistToken(db.Model):
     """
     Blacklisted Tokens Check
     """
-    __tablename__ = 'blacklist_tokens'
+    __tablename__ = "blacklist_tokens"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     token = db.Column(db.String(500), unique=True, nullable=False)
@@ -85,3 +89,34 @@ class BlacklistToken:
             return True
         else:
             return False
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+
+class Flight(db.Model):
+    """
+    Flights Model
+    """
+    __tablename__ = "flight"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+    origin = db.Column(db.String(50), nullable=False)
+    destination = db.Column(db.String(50), nullable=False)
+    date = db.Column(db.DateTime)
+    departure_time = db.Column(db.DateTime)
+    arrival_time = db.Column(db.DateTime)
+
+    def __init__(self, name, origin, destination, date, departure_time, arrival_time):
+        self.name = name
+        self.origin = origin,
+        self.destination = destination,
+        self.date = date,
+        self.departure_time = departure_time
+        self.arrival_time = arrival_time
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()

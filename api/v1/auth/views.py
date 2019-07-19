@@ -1,6 +1,7 @@
 # api/v1/auth/views.py
 
 from flask import Blueprint, request, make_response, jsonify
+from flask_jwt_extended import create_access_token
 from flask.views import MethodView
 
 from api.v1 import bcrypt, db
@@ -20,21 +21,21 @@ class Register(MethodView):
         if not user:
             try:
                 user = User(
-                    name = data.get('name'),
+                    name=data.get('name'),
                     email=data.get('email'),
                     password=data.get('password')
                 )
 
                 # Add user to database
-                db.session.add(user)
-                db.session.commit()
+                user.save()
 
                 # Generate auth token
-                auth_token = user.encode_auth_token(user.id)
+                # auth_token = user.encode_auth_token(user.id)
+                access_token = create_access_token(identity=user.id)
                 response = {
                     'status': 'success',
                     'message': 'You have been successfully registered.',
-                    'auth_token': auth_token.decode()
+                    'auth_token': access_token
                 }
                 return make_response(jsonify(response)), 201
             except Exception as e:
@@ -62,21 +63,29 @@ class Login(MethodView):
             user = User.query.filter_by(
                 email=data.get('email')
             ).first()
+            if not user:
+                response = {
+                    'status': 'failed',
+                    'message': 'User does not exist, please sign up'
+                }
+                return make_response(jsonify(response)), 404
+
             if user and bcrypt.check_password_hash(
                 user.password, data.get('password')
             ):
-                auth_token = user.encode_auth_token(user.id)
-                if auth_token:
+                # auth_token = user.encode_auth_token(user.id)
+                access_token = create_access_token(identity=user.id)
+                if access_token:
                     response = {
                         'status': 'success',
                         'message': 'Successfully logged in',
-                        'auth_token': auth_token.decode()
+                        'auth_token': access_token
                     }
                     return make_response(jsonify(response)), 200
             else:
                 response = {
                     'status': 'failed',
-                    'message': 'User does not exist, please sign up'
+                    'message': 'Please check your password and try again'
                 }
                 return make_response(jsonify(response)), 404
         except Exception as e:
@@ -144,7 +153,7 @@ class Logout(MethodView):
         if auth_header:
             auth_token = auth_header.split(" ")[1]
         else:
-            # auth_token = ''
+            auth_token = ''
             return make_response("You are not logged in"), 403
         if auth_token:
             resp = User.decode_auth_token(auth_token)
