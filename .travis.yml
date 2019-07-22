@@ -1,7 +1,8 @@
 dist: xenial
 services:
   - postgresql
-before_script: cd api
+before_script:
+  - cd api
   - psql -c 'create database flight_test;' -U postgres
 language: python
 python:
