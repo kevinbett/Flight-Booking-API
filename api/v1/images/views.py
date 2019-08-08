@@ -69,6 +69,28 @@ class Images(MethodView):
             }
             return make_response(jsonify(response)), 200
 
+    @jwt_required
+    def delete(self):
+        """
+        Delete passport image
+        """
+        user_id = get_jwt_identity()
+        image = Image.query.filter_by(user=user_id).first()
+        if not image:
+            response = {
+                'status' : 'failed',
+                'message' : 'You do not have a passport image saved. '
+            }
+            return make_response(jsonify(response))
+        else:
+            destroy(str(user_id))
+            image.delete()
+            response = {
+                'status' : 'success',
+                'message' : 'Passport image has been successfully deleted'
+            }
+            return make_response(jsonify(response)), 200
+
 
 # Api endpoints
 passport_view = Images.as_view('images')
