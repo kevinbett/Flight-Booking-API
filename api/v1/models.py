@@ -5,7 +5,6 @@ import datetime
 
 from api.v1 import app, db, bcrypt
 
-
 class User(db.Model):
     """User Model"""
     __tablename__ = "users"
@@ -120,3 +119,28 @@ class Flight(db.Model):
     def save(self):
         db.session.add(self)
         db.session.commit()
+
+
+class Image(db.Model):
+    """
+    Model to store image urls
+    """
+    __tablename__ = 'images'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    image_url = db.Column(db.String(500))
+    user = db.Column(db.Integer, db.ForeignKey(User.id))
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def __repr__(self):
+        """
+        Return image instance
+        """
+        return "<Image: {}>".format(self.image_url)

@@ -1,0 +1,27 @@
+[report]
+omit =
+	*virtualenv/*
+    *sqlalchemy/*
+    *click/*
+    *flask/*
+    *itsdangerous.py
+    *jinja2/*
+    *jwt/*
+    *markupsafe.py*
+    *markupsafe/*
+    *psycopg2.py*
+    *psycopg2/*
+    *six.py*
+    *sqlalchemy.py*
+    *werkzeug.py*
+    *werkzeug/*
+    *decimal.py*
+    *encodings/*
+    *hmac.py*
+    *html.py*
+    *html/*
+    *mimetypes.py*
+    *numbers.py*
+    *stringprep.py*
+    *typing.py*
+    *uuid.py*
