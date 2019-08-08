@@ -36,11 +36,11 @@ class Images(MethodView):
                 width=250,
                 height=250,
                 gravity="faces",
-                crop = "fill"
+                crop="fill"
             )
             new_image = Image(
-                image_url = url,
-                user = user_id
+                image_url=url,
+                user=user_id
             )
             new_image.save()
             response = {
@@ -49,12 +49,29 @@ class Images(MethodView):
             }
             return make_response(jsonify(response)), 201
 
+    @jwt_required
+    def get(self):
+        """
+        Retrieve passport url
+        """
+        user_id = get_jwt_identity()
+        image = Image.query.filter_by(user=user_id).first()
+        if not image:
+            response = {
+                'status' : 'failed',
+                'message' : 'You have not uploaded your passport image'
+            }
+            return make_response(jsonify(response))
+        else:
+            response = {
+                "status": "success",
+                "image_url": image.image_url
+            }
+            return make_response(jsonify(response)), 200
+
+
 # Api endpoints
 passport_view = Images.as_view('images')
 
 # Rules
-passport_blueprint.add_url_rule(
-    '/passport/image',
-    view_func=passport_view,
-    methods=['POST']
-)
+passport_blueprint.add_url_rule('/passport/image', view_func=passport_view)

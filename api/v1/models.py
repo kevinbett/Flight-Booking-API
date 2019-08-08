@@ -15,6 +15,8 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     reg_date = db.Column(db.DateTime, nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
+    images = db.relationship('Image', order_by='Image.id', cascade="all, delete-orphan")
+
 
     def __init__(self, email, name, password, admin=False):
         self.email = email
