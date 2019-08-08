@@ -24,5 +24,7 @@ jwt = JWTManager(app)
 
 from api.v1.auth.views import auth_blueprint
 from api.v1.flight.views import flight_blueprint
+from api.v1.images.views import passport_blueprint
 app.register_blueprint(auth_blueprint)
 app.register_blueprint(flight_blueprint)
+app.register_blueprint(passport_blueprint)

@@ -1,7 +1,7 @@
 # api/v1/auth/views.py
 
 from flask import Blueprint, request, make_response, jsonify
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from flask.views import MethodView
 
 from api.v1 import bcrypt, db
@@ -187,6 +187,7 @@ registration_view = Register.as_view('register')
 login_view = Login.as_view('login')
 user_view = GetUser.as_view('users')
 logout_view = Logout.as_view('logout')
+
 
 # Rules
 auth_blueprint.add_url_rule(
