@@ -44,7 +44,6 @@ class TestAuthBlueprint(BaseTestCase):
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] ==
                             'You have been successfully registered.')
-            self.assertTrue(data['auth_token'])
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 201)
 
@@ -77,7 +76,6 @@ class TestAuthBlueprint(BaseTestCase):
             self.assertTrue(
                 reg_data['message'] == 'You have been successfully registered.'
             )
-            self.assertTrue(reg_data['auth_token'])
             self.assertTrue(reg.content_type == 'application/json')
             self.assertEqual(reg.status_code, 201)
             # login

@@ -6,6 +6,7 @@ from flask.views import MethodView
 
 from api.v1 import bcrypt, db
 from api.v1.models import User, BlacklistToken
+import datetime
 
 auth_blueprint = Blueprint('auth', __name__)
 
@@ -29,13 +30,9 @@ class Register(MethodView):
                 # Add user to database
                 user.save()
 
-                # Generate auth token
-                # auth_token = user.encode_auth_token(user.id)
-                access_token = create_access_token(identity=user.id)
                 response = {
                     'status': 'success',
-                    'message': 'You have been successfully registered.',
-                    'auth_token': access_token
+                    'message': 'You have been successfully registered.'
                 }
                 return make_response(jsonify(response)), 201
             except Exception as e:
@@ -51,7 +48,11 @@ class Register(MethodView):
             }
             return make_response(jsonify(response)), 202
 
-
+def create_dev_token(user_id):
+        username = user_id
+        expires = datetime.timedelta(days=30)
+        token = create_access_token(username, expires_delta=expires)
+        return token
 class Login(MethodView):
     """
     User Login
@@ -73,8 +74,7 @@ class Login(MethodView):
             if user and bcrypt.check_password_hash(
                 user.password, data.get('password')
             ):
-                # auth_token = user.encode_auth_token(user.id)
-                access_token = create_access_token(identity=user.id)
+                access_token = create_dev_token(user_id=user.id)
                 if access_token:
                     response = {
                         'status': 'success',
