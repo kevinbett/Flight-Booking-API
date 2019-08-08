@@ -2,10 +2,8 @@
 
 from flask import Blueprint, request, make_response, jsonify
 from flask.views import MethodView
-from flask_jwt_extended import (create_access_token, create_refresh_token,
-                                jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
-from api.v1 import bcrypt, db
-from api.v1.models import User, Flight, BlacklistToken
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from api.v1.models import User, Flight
 from api.v1.helpers.check_admin import check_admin
 
 flight_blueprint = Blueprint('flight', __name__)

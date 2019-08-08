@@ -5,6 +5,7 @@ import datetime
 
 from api.v1 import app, db, bcrypt
 
+
 class User(db.Model):
     """User Model"""
     __tablename__ = "users"
@@ -15,8 +16,9 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     reg_date = db.Column(db.DateTime, nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
-    images = db.relationship('Image', order_by='Image.id', cascade="all, delete-orphan")
-
+    images = db.relationship('Image', order_by='Image.id',
+                             cascade="all, delete-orphan")
+    bookings = db.relationship('Booking', backref='users', lazy=True)
 
     def __init__(self, email, name, password, admin=False):
         self.email = email
@@ -109,6 +111,7 @@ class Flight(db.Model):
     date = db.Column(db.DateTime)
     departure_time = db.Column(db.DateTime)
     arrival_time = db.Column(db.DateTime)
+    bookings = db.relationship('Booking', backref='flight', lazy=True)
 
     def __init__(self, name, origin, destination, date, departure_time, arrival_time):
         self.name = name
@@ -117,6 +120,23 @@ class Flight(db.Model):
         self.date = date,
         self.departure_time = departure_time
         self.arrival_time = arrival_time
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+
+class Booking(db.Model):
+    """
+    Bookings Model
+    """
+    __tablename__ = 'booking'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    booking_date = db.Column(db.DateTime, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
+    flight_id = db.Column(db.Integer, db.ForeignKey(Flight.id), nullable=False)
+    tickets = db.Column(db.Integer, nullable=False)
 
     def save(self):
         db.session.add(self)
