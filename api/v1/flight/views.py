@@ -3,7 +3,7 @@
 from flask import Blueprint, request, make_response, jsonify
 from flask.views import MethodView
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from api.v1.models import User, Flight
+from api.v1.models import User, Flight, Booking
 from api.v1.helpers.check_admin import check_admin
 
 flight_blueprint = Blueprint('flight', __name__)
@@ -56,8 +56,34 @@ class CreateFlight(MethodView):
             return make_response(jsonify(response)), 401
 
 
+class GetBookings(MethodView):
+    """
+    End point to get bookings per flight
+    """
+    @jwt_required
+    def get(self):
+        data = request.get_json()
+
+        bookings = Booking.query.filter_by(
+            flight_id=data.get('flight_id')).all()
+        if not bookings:
+            response = {
+                "status": "failed",
+                "message": "No bookings available"
+            }
+            return make_response(jsonify(response)), 401
+        booking_number = []
+        for booking in bookings:
+            booking_number.append(booking)
+        response = {
+            'number_of_bookings': len(booking_number)
+        }
+        return make_response(jsonify(response))
+
+
 # Api endpoints
 flight_view = CreateFlight.as_view('createflight')
+bookings_view = GetBookings.as_view('getbookings')
 
 # Rules
 flight_blueprint.add_url_rule(
@@ -65,3 +91,5 @@ flight_blueprint.add_url_rule(
     view_func=flight_view,
     methods=['POST']
 )
+flight_blueprint.add_url_rule(
+    '/flight/getbookings', view_func=bookings_view, methods=['GET'])
