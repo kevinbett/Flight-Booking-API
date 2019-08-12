@@ -6,6 +6,7 @@ from flask.views import MethodView
 
 from api.v1 import bcrypt, db
 from api.v1.models import User, BlacklistToken
+from api.v1.helpers.validation import validate_input
 import datetime
 
 auth_blueprint = Blueprint('auth', __name__)
@@ -19,10 +20,19 @@ class Register(MethodView):
     def post(self):
         data = request.get_json()
         user = User.query.filter_by(email=data.get('email')).first()
+
+        name = data['username']
+        email = data['email']
+        password = data['password']
+
+        check_data = validate_input(data)
+        if check_data is not data:
+            return jsonify({"message": check_data}), 400
+
         if not user:
             try:
                 user = User(
-                    name=data.get('name'),
+                    name=data.get('username'),
                     email=data.get('email'),
                     password=data.get('password')
                 )

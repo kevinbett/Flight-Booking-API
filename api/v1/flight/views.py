@@ -5,6 +5,7 @@ from flask.views import MethodView
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from api.v1.models import User, Flight, Booking
 from api.v1.helpers.check_admin import check_admin
+from api.v1.helpers.validation import validate_flight
 
 flight_blueprint = Blueprint('flight', __name__)
 
@@ -22,6 +23,17 @@ class CreateFlight(MethodView):
             return make_response(jsonify({'error': error.args[0]}), 403)
         data = request.get_json()
         flight = Flight.query.filter_by(name=data.get('name')).first()
+
+        name = data['name'].strip()
+        origin = data['origin']
+        destination = data['destination']
+        departure_time = data['departure_time']
+        arrival_time = data['arrival_time']
+        flight_details = validate_flight(data)
+
+        if flight_details is not data:
+            return jsonify({"message":flight_details}), 400
+
         if not flight:
             try:
                 flight = Flight(
