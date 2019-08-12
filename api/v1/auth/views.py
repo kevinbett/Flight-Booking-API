@@ -58,11 +58,7 @@ class Register(MethodView):
             }
             return make_response(jsonify(response)), 202
 
-def create_dev_token(user_id):
-        username = user_id
-        expires = datetime.timedelta(days=30)
-        token = create_access_token(username, expires_delta=expires)
-        return token
+
 class Login(MethodView):
     """
     User Login
@@ -84,12 +80,13 @@ class Login(MethodView):
             if user and bcrypt.check_password_hash(
                 user.password, data.get('password')
             ):
-                access_token = create_dev_token(user_id=user.id)
+                access_token = User.encode_auth_token(self, user_id=user.id)
+                print(access_token)
                 if access_token:
                     response = {
                         'status': 'success',
                         'message': 'Successfully logged in',
-                        'auth_token': access_token
+                        'auth_token': access_token.decode()
                     }
                     return make_response(jsonify(response)), 200
             else:
@@ -97,7 +94,7 @@ class Login(MethodView):
                     'status': 'failed',
                     'message': 'Please check your password and try again'
                 }
-                return make_response(jsonify(response)), 404
+                return make_response(jsonify(response)), 400
         except Exception as e:
             response = {
                 'status': 'failed',
