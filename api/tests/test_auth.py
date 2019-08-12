@@ -10,11 +10,11 @@ from api.v1.models import User, BlacklistToken
 from api.tests.base import BaseTestCase
 
 
-def register_user(self, name, email, password):
+def register_user(self, username, email, password):
     return self.client.post(
         '/auth/register',
         data=json.dumps(dict(
-            name=name,
+            username=username,
             email=email,
             password=password
         )),
@@ -34,12 +34,11 @@ def login_user(self, email, password):
 
 
 class TestAuthBlueprint(BaseTestCase):
-    # TODO: Rename test case
 
     def test_registration(self):
         """ User registration test """
         with self.client:
-            response = register_user(self, 'Kevin Bett', 'bettkevin757@gmail.com', '123456')
+            response = register_user(self, 'Kevin', 'bettkevin757@gmail.com', 'Password@1')
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] ==
@@ -50,14 +49,14 @@ class TestAuthBlueprint(BaseTestCase):
     def test_register_with_registered_email(self):
         """ Test registration for an already registered user """
         user = User(
-            name='Jonh K',
+            name='JonhK',
             email='bettkevin757@gmail.com',
-            password='123456'
+            password='Password@1'
         )
         db.session.add(user)
         db.session.commit()
         with self.client:
-            response = register_user(self, 'John K', 'bettkevin757@gmail.com', '123456')
+            response = register_user(self, 'JohnK', 'bettkevin757@gmail.com', 'Password@1')
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'failed')
             self.assertTrue(
@@ -70,7 +69,7 @@ class TestAuthBlueprint(BaseTestCase):
         """ Test for login """
         with self.client:
             # register user
-            reg = register_user(self, 'Kevin Bett', 'bettkevin757@gmail.com', '123456')
+            reg = register_user(self, 'Kevin', 'bettkevin757@gmail.com', 'Password@1')
             reg_data = json.loads(reg.data.decode())
             self.assertTrue(reg_data['status'] == 'success')
             self.assertTrue(
@@ -79,7 +78,7 @@ class TestAuthBlueprint(BaseTestCase):
             self.assertTrue(reg.content_type == 'application/json')
             self.assertEqual(reg.status_code, 201)
             # login
-            response = login_user(self, 'bettkevin757@gmail.com', '123456')
+            response = login_user(self, 'bettkevin757@gmail.com', 'Password@1')
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Successfully logged in')
@@ -90,7 +89,7 @@ class TestAuthBlueprint(BaseTestCase):
     def test_none_registered_login(self):
         """ Test for none registered login attempt"""
         with self.client:
-            response = login_user(self, 'bett@gmail.com', '123456')
+            response = login_user(self, 'bett@gmail.com', 'Password@1')
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'failed')
             self.assertTrue(

@@ -2,6 +2,8 @@ from flask import Blueprint, request, make_response, jsonify
 from flask.views import MethodView
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
+from api.v1.helpers.validation import validate_bookings
+
 import datetime
 
 from api.v1.models import User, Booking, Flight
@@ -21,6 +23,15 @@ class FlightBooking(MethodView):
         flight_id = data['flight_id']
 
         check_flight = Flight.query.filter_by(id=flight_id).first()
+
+        flight_id = data['flight_id']
+        number_of_tickets = data['number_of_tickets']
+
+        check_booking = validate_bookings(data)
+
+        if check_booking is not data:
+            return jsonify({"message": check_booking})
+
         if not check_flight:
             response = {
                 'status': 'failed',
