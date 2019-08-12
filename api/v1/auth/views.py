@@ -184,7 +184,7 @@ class Logout(MethodView):
             else:
                 response = {
                     'status': 'fail',
-                    'message': 'Provide a valid auth token.'
+                    'message': 'You are already looged out.'
                 }
                 return make_response(jsonify(response)), 403
 
