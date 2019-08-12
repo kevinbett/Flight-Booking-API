@@ -178,3 +178,27 @@ class TestAuthBlueprint(BaseTestCase):
         result = json.loads(response.data.decode())
         self.assertTrue(result['Message'] == 'you have been successfully logged out')
         self.assertTrue(reg.content_type == 'application/json')
+
+    def test_repeated_log_out(self):
+        # Register
+        reg = register_user(self, 'Kevin', 'bettkevin757@gmail.com', 'Password@1')
+        reg_data = json.loads(reg.data.decode())
+        self.assertTrue(reg_data['status'] == 'success')
+        self.assertTrue(
+            reg_data['message'] == 'You have been successfully registered.'
+        )
+        self.assertTrue(reg.content_type == 'application/json')
+        self.assertEqual(reg.status_code, 201)
+        # login
+        response = login_user(self, 'bettkevin757@gmail.com', 'Password@1')
+        data = json.loads(response.data.decode())
+        access_token = data['auth_token']
+        # logout
+        response = self.client.post('/auth/logout', headers=dict(Authorization="Bearer " + access_token),
+        content_type='application/json')
+        response = self.client.post('/auth/logout', headers=dict(Authorization="Bearer " + access_token),
+        content_type='application/json')
+        self.assertEqual(response.status_code, 403)
+        result = json.loads(response.data.decode())
+        self.assertTrue(result['message'] == 'You are already looged out.')
+        self.assertTrue(reg.content_type == 'application/json')
