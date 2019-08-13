@@ -81,7 +81,6 @@ class Login(MethodView):
                 user.password, data.get('password')
             ):
                 access_token = User.encode_auth_token(self, user_id=user.id)
-                print(access_token)
                 if access_token:
                     response = {
                         'status': 'success',
