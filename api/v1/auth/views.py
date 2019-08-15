@@ -81,7 +81,6 @@ class Login(MethodView):
                 user.password, data.get('password')
             ):
                 access_token = User.encode_auth_token(self, user_id=user.id)
-                print(access_token)
                 if access_token:
                     response = {
                         'status': 'success',
@@ -132,7 +131,7 @@ class GetUser(MethodView):
                     'data': {
                         'user_id': user.id,
                         'email': user.email,
-                        'admin': user.dmin,
+                        'admin': user.admin,
                         'registered_on': user.reg_date
                     }
                 }
