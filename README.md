@@ -8,16 +8,14 @@ The flight booking application enables users to book flights, upload their passp
 
 Users are able to perform the following functions;
 
-* > - Sign up for an account
-* > -Log in into the application
-* > -Upload a passport images
-* > -Edit a passport images
-* > -Delete a passport image
-* > -Add a flight
-* > -Edit a flight
-* > -Delete a flight
-* > -Book a flight
-* > -Get flight reminders
+> * Sign up for an account
+> * Log in into the application
+> * Upload a passport images
+> * Edit a passport images
+> * Delete a passport image
+> * Add a flight
+> * Book a flight
+> * Get flight reminders
 
 # Prerequisites
 
