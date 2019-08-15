@@ -4,13 +4,16 @@
 import os
 import unittest
 
+from flask_apscheduler import APScheduler
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
+from flask_mail import Mail
 
 from api.v1 import app, db, models
 
 migrate = Migrate(app, db)
 manager = Manager(app)
+mail = Mail()
 
 # migrations
 manager.add_command('db', MigrateCommand)
@@ -39,4 +42,8 @@ def drop_db():
 
 
 if __name__ == '__main__':
+    scheduler = APScheduler()
+    scheduler.init_app(app)
+    scheduler.start()
+    mail.init_app(app)
     manager.run()
