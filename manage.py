@@ -9,11 +9,14 @@ from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from flask_mail import Mail
 
+from flask_heroku import Heroku
+
 from api.v1 import app, db, models
 
 migrate = Migrate(app, db)
 manager = Manager(app)
 mail = Mail()
+heroku = Heroku(app)
 
 # migrations
 manager.add_command('db', MigrateCommand)
