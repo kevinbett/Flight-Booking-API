@@ -31,7 +31,7 @@ class DevelopmentConfig(BaseConfig):
     """Development configuration."""
     DEBUG = True
     BCRYPT_LOG_ROUNDS = 4
-    SQLALCHEMY_DATABASE_URI = postgres_local_base + database_name
+    DATABASE_URI = os.getenv('DATABASE_URI')
 
 
 class TestingConfig(BaseConfig):
@@ -39,7 +39,7 @@ class TestingConfig(BaseConfig):
     DEBUG = True
     TESTING = True
     BCRYPT_LOG_ROUNDS = 4
-    SQLALCHEMY_DATABASE_URI = postgres_local_base + database_name + '_test'
+    DATABASE_URI = os.getenv('TEST_DATABASE_URI')
     PRESERVE_CONTEXT_ON_EXCEPTION = False
 
 
@@ -47,4 +47,3 @@ class ProductionConfig(BaseConfig):
     """Production configuration."""
     SECRET_KEY = 'my_precious'
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = 'postgresql:///example'
