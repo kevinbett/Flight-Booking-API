@@ -33,13 +33,13 @@ Use virtualenv for modules management.
 ## Running the API
 **EndPoint** | **Functionality**
 --- | ---
-POST `/api/v1/auth/register` | Register user account
-POST `/api/v1/auth/login` | login user
-POST `/api/v1/passport/image` | upload passport
-DELETE `/api/v1/passport/image` | delete passport
-POST  `/api/v1/flight/createflight` | Create a flight
-post `/api/v1/booking/flightbooking` | Book a flight
-GET  `/api/v1/flight/getbookings` | Gets all bookings per flight
+POST `/auth/register` | Register user account
+POST `/auth/login` | login user
+POST `/passport/image` | upload passport
+DELETE `/passport/image` | delete passport
+POST  `/flight/createflight` | Create a flight
+POST `/booking/flightbooking` | Book a flight
+GET  `/flight/getbookings` | Gets all bookings per flight
 
 # Contributing
 
