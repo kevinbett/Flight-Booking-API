@@ -90,7 +90,7 @@ class GetBookings(MethodView):
         response = {
             'number_of_bookings': len(booking_number)
         }
-        return make_response(jsonify(response))
+        return make_response(jsonify(response)), 200
 
 
 # Api endpoints
