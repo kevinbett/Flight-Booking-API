@@ -182,3 +182,9 @@ class BaseTestCase(TestCase):
             content_type='application/json',
             headers=dict(Authorization=self.get_token())
         )
+
+    def get_users(self):
+        return self.client.get(
+            'auth/users',
+            headers=dict(Authorization=self.get_token())
+        )
