@@ -53,6 +53,30 @@ class TestAuthBlueprint(BaseTestCase):
         self.assertTrue(response.content_type == 'application/json')
         self.assertTrue(response.status_code, 400)
 
+    def test_registration_with_blank_email(self):
+        """
+        Test where a blank email is used
+        """
+        response = self.register_user(self.blank_email_data)
+        data = json.loads(response.data.decode())
+        self.assertTrue(
+            data['message'] == 'Email cannot be blank.'
+        )
+        self.assertTrue(response.content_type == 'application/json')
+        self.assertTrue(response.status_code, 400)
+
+    def test_registration_with_blank_password(self):
+        """
+        Test where a blank password is used
+        """
+        response = self.register_user(self.blank_password_data)
+        data = json.loads(response.data.decode())
+        self.assertTrue(
+            data['message'] == 'Password cannot be blank.'
+        )
+        self.assertTrue(response.content_type == 'application/json')
+        self.assertTrue(response.status_code, 400)
+
     def test_invalid_user_name_characters(self):
         """
         Invalid username test
@@ -108,6 +132,17 @@ class TestAuthBlueprint(BaseTestCase):
         reg_data = json.loads(reg.data.decode())
 
         response = self.login_user(self.wrong_password_data)
+        data = json.loads(response.data.decode())
+        self.assertTrue(data['status'] == 'failed')
+        self.assertTrue(data['message'] == 'Please check your password and try again')
+        self.assertTrue(response.content_type == 'application/json')
+        self.assertEqual(response.status_code, 400)
+
+    def test_blank_password_login(self):
+        reg = self.register_user(self.registration_data)
+        reg_data = json.loads(reg.data.decode())
+
+        response = self.login_user(self.blank_password_data)
         data = json.loads(response.data.decode())
         self.assertTrue(data['status'] == 'failed')
         self.assertTrue(data['message'] == 'Please check your password and try again')

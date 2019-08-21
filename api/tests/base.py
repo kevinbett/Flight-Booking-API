@@ -45,6 +45,18 @@ class BaseTestCase(TestCase):
             'password': 'Password@1',
         }
 
+        self.blank_email_data = {
+            'username': 'Kevin',
+            'email': '',
+            'password': 'Password@1',
+        }
+
+        self.blank_password_data = {
+            'username': 'Kevin',
+            'email': 'bettkevin757@gmail.com',
+            'password': '',
+        }
+
         self.short_username_data = {
             'username': 'Ke',
             'email': 'shortusername@gmail.com',

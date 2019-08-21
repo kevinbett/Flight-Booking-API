@@ -7,6 +7,12 @@ def validate_input(data):
     """
     User input validation
     """
+    if len(data['email'].strip()) == 0:
+        # Checks length of email
+        return "Email cannot be blank."
+    if len(data['password'].strip()) == 0:
+        # Checks length of password
+        return "Password cannot be blank."
     if not re.match(r"(^[a-zA-Z0-9_.]+@[a-zA-Z0-9-]+\.[a-z]+$)", data['email']):
         # Checks email validity
         return "Please provide a valid email and try again"
