@@ -100,12 +100,26 @@ class BaseTestCase(TestCase):
             "flight_id": "1"
         }
 
+        self.booking_blank_flight_id = {
+            "number_of_tickets": "3",
+            "flight_id": ""
+        }
+
+        self.booking_blank_fields = {
+            "number_of_tickets": "",
+            "flight_id": ""
+        }
+
         self.get_booking_data = {
             "flight_id": "1"
         }
 
         self.get_booking_data_no_flight = {
             "flight_id": "10"
+        }
+
+        self.get_booking_data_no_id = {
+            "flight_id": ""
         }
 
     def tearDown(self):

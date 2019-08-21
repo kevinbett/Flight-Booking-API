@@ -32,6 +32,27 @@ class BookingsTestCase(BaseTestCase):
         self.assertTrue(response.content_type == 'application/json')
         self.assertEqual(response.status_code, 400)
 
+
+    def test_booking_with_blank_flight_id(self):
+        """ book non existent flight test """
+        response = self.create_booking(self.booking_blank_flight_id)
+        data = json.loads(response.data.decode())
+        self.assertTrue(
+            data['message'] == "Please enter number of tickets and flight_id"
+        )
+        self.assertTrue(response.content_type == 'application/json')
+        self.assertEqual(response.status_code, 200)
+
+    def test_booking_with_blank_fields(self):
+        """ book non existent flight test """
+        response = self.create_booking(self.booking_blank_fields)
+        data = json.loads(response.data.decode())
+        self.assertTrue(
+            data['message'] == "Please enter number of tickets and flight_id"
+        )
+        self.assertTrue(response.content_type == 'application/json')
+        self.assertEqual(response.status_code, 200)
+
     def test_booking_with_empty_ticket(self):
         """ booking with empty ticket test """
         response = self.create_booking(self.booking_data_no_ticket)
@@ -62,3 +83,13 @@ class BookingsTestCase(BaseTestCase):
             response['message'] == "No bookings available"
         )
         self.assertTrue(response['status'] == 'failed')
+
+    def test_get_bookings_no_id(self):
+        """ Get booking test fo no id """
+        create_flight = self.create_flight(self.flight_data)
+        book_flight = self.create_booking(self.booking_data)
+        get_booking = self.get_booking(self.get_booking_data_no_id)
+        response = json.loads(get_booking.data.decode())
+        self.assertTrue(
+            response['message'] == "Please enter the flight_id"
+        )
