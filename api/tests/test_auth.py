@@ -9,6 +9,7 @@ from api.v1 import db
 from api.v1.models import User, BlacklistToken
 from api.tests.base import BaseTestCase
 
+
 class TestAuthBlueprint(BaseTestCase):
 
     def test_registration(self):
@@ -134,7 +135,8 @@ class TestAuthBlueprint(BaseTestCase):
         response = self.login_user(self.wrong_password_data)
         data = json.loads(response.data.decode())
         self.assertTrue(data['status'] == 'failed')
-        self.assertTrue(data['message'] == 'Please check your password and try again')
+        self.assertTrue(data['message'] ==
+                        'Please check your password and try again')
         self.assertTrue(response.content_type == 'application/json')
         self.assertEqual(response.status_code, 400)
 
@@ -145,10 +147,10 @@ class TestAuthBlueprint(BaseTestCase):
         response = self.login_user(self.blank_password_data)
         data = json.loads(response.data.decode())
         self.assertTrue(data['status'] == 'failed')
-        self.assertTrue(data['message'] == 'Please check your password and try again')
+        self.assertTrue(data['message'] ==
+                        'Please check your password and try again')
         self.assertTrue(response.content_type == 'application/json')
         self.assertEqual(response.status_code, 400)
-
 
     def test_none_registered_login(self):
         """ Test for none registered login attempt"""
@@ -162,6 +164,17 @@ class TestAuthBlueprint(BaseTestCase):
         self.assertTrue(response.content_type == 'application/json')
         self.assertTrue(response.status_code, 404)
 
+    def test_get_users(self):
+        """ Test for getting users """
+
+        # register user
+        reg = self.register_user(self.registration_data)
+        response = self.get_users()
+        data = json.loads(response.data.decode())
+        self.assertTrue(response.content_type == 'application/json')
+        self.assertTrue(data['status'] == 'success')
+        self.assertTrue(data['data'])
+
     def test_log_out(self):
         # Register
         reg = self.register_user(self.registration_data)
@@ -172,10 +185,11 @@ class TestAuthBlueprint(BaseTestCase):
         access_token = data['auth_token']
         # logout
         response = self.client.post('/auth/logout', headers=dict(Authorization="Bearer " + access_token),
-        content_type='application/json')
+                                    content_type='application/json')
         self.assertEqual(response.status_code, 200)
         result = json.loads(response.data.decode())
-        self.assertTrue(result['Message'] == 'you have been successfully logged out')
+        self.assertTrue(result['Message'] ==
+                        'you have been successfully logged out')
         self.assertTrue(reg.content_type == 'application/json')
 
     def test_repeated_log_out(self):
@@ -183,14 +197,14 @@ class TestAuthBlueprint(BaseTestCase):
         reg = self.register_user(self.registration_data)
         reg_data = json.loads(reg.data.decode())
         # login
-        response = self.login_user(self.login_data )
+        response = self.login_user(self.login_data)
         data = json.loads(response.data.decode())
         access_token = data['auth_token']
         # logout
         response = self.client.post('/auth/logout', headers=dict(Authorization="Bearer " + access_token),
-        content_type='application/json')
+                                    content_type='application/json')
         response = self.client.post('/auth/logout', headers=dict(Authorization="Bearer " + access_token),
-        content_type='application/json')
+                                    content_type='application/json')
         self.assertEqual(response.status_code, 403)
         result = json.loads(response.data.decode())
         self.assertTrue(result['message'] == 'You are already looged out.')
