@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.com/kevinbett/Flight-Booking-API.svg?branch=ft-add-passport-167105135)](https://travis-ci.com/kevinbett/Flight-Booking-API)
 [![Maintainability](https://api.codeclimate.com/v1/badges/4c656883a42b03c6e3d1/maintainability)](https://codeclimate.com/github/kevinbett/Flight-Booking-API/maintainability)
+[![Coverage Status](https://coveralls.io/repos/github/kevinbett/Flight-Booking-API/badge.svg?branch=master)](https://coveralls.io/github/kevinbett/Flight-Booking-API?branch=master)
 # Flight Booking API
 
 The flight booking application enables users to book flights, upload their passport images and get reminders when their flights are due.
