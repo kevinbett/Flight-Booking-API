@@ -34,7 +34,8 @@ class Register(MethodView):
                 user = User(
                     name=data.get('username'),
                     email=data.get('email'),
-                    password=data.get('password')
+                    password=data.get('password'),
+                    admin = data.get('admin')
                 )
 
                 # Add user to database

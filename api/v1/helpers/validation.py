@@ -41,3 +41,10 @@ def validate_bookings(booking):
 
     else:
         return booking
+
+def validate_get_bookings(booking):
+    if not booking['flight_id']:
+        return "Please enter the flight_id"
+
+    else:
+        return booking

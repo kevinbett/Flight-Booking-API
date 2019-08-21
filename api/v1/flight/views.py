@@ -5,7 +5,7 @@ from flask.views import MethodView
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from api.v1.models import User, Flight, Booking
 from api.v1.helpers.check_admin import check_admin
-from api.v1.helpers.validation import validate_flight
+from api.v1.helpers.validation import validate_flight, validate_get_bookings
 
 flight_blueprint = Blueprint('flight', __name__)
 
@@ -76,6 +76,10 @@ class GetBookings(MethodView):
     def get(self):
         data = request.get_json()
 
+        check_booking = validate_get_bookings(data)
+        if check_booking is not data:
+            return jsonify({"message": check_booking})
+
         bookings = Booking.query.filter_by(
             flight_id=data.get('flight_id')).all()
         if not bookings:
@@ -90,7 +94,7 @@ class GetBookings(MethodView):
         response = {
             'number_of_bookings': len(booking_number)
         }
-        return make_response(jsonify(response))
+        return make_response(jsonify(response)), 200
 
 
 # Api endpoints

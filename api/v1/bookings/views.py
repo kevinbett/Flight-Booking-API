@@ -22,15 +22,15 @@ class FlightBooking(MethodView):
         ticket_quantity = data['number_of_tickets']
         flight_id = data['flight_id']
 
-        check_flight = Flight.query.filter_by(id=flight_id).first()
-
-        flight_id = data['flight_id']
-        number_of_tickets = data['number_of_tickets']
-
         check_booking = validate_bookings(data)
 
         if check_booking is not data:
             return jsonify({"message": check_booking})
+
+        check_flight = Flight.query.filter_by(id=flight_id).first()
+
+        flight_id = data['flight_id']
+        number_of_tickets = data['number_of_tickets']
 
         if not check_flight:
             response = {
