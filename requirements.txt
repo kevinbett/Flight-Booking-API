@@ -25,7 +25,7 @@ greenlet==0.4.15
 gunicorn==19.9.0
 idna==2.8
 itsdangerous==0.24
-Jinja2==2.8
+Jinja2==2.11.3
 locustio==0.11.0
 Mako==1.0.6
 MarkupSafe==0.23
